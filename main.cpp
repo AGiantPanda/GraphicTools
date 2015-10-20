@@ -22,6 +22,9 @@ GLfloat lastY = 0.0f;
 bool keys[1024];
 Arcball arcball(WIDTH / 2, glm::vec2(WIDTH / 2, HEIGHT / 2));
 
+int firsttime = GetTickCount();
+int secondtime;
+
 GLfloat vertices[] = {
 	//vertex    //normal    //texcoord
 	-1, -1, -1,  0,  0, -1,  0, 0,
@@ -128,7 +131,13 @@ void init()
 void display()
 {
 	static int frame = 0;
-	std::cout << frame++ << std::endl;
+	frame++;
+	secondtime = GetTickCount();
+	if ((secondtime - firsttime) == 1000){
+		std::cout << "frame: " << frame << std::endl;
+		frame = 0;
+		firsttime = secondtime;
+	}
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glUseProgram(programHandle);
@@ -144,7 +153,7 @@ void display()
 	glBindVertexArray(vao);
 
 	glm::mat4 view = glm::lookAt(glm::vec3(0,0,9), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-	glm::mat4 projection = glm::perspective(GLfloat(60.0f), (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 100.0f);
+	glm::mat4 projection = glm::perspective(GLfloat(45.0f), (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 100.0f);
 	glm::mat4 model = arcball.GetArcballMatrix();
 	GLint modelLoc = glGetUniformLocation(programHandle, "model");
 	GLint viewLoc = glGetUniformLocation(programHandle, "view");
@@ -172,29 +181,28 @@ void mouse(int button, int state, int x, int y)
 {
 	if (button == GLUT_LEFT_BUTTON&&state == GLUT_DOWN){
 		arcball.mouse_down(LEFTBUTTON_DOWN);
-		lastX = (GLfloat)x - WIDTH / 2;
-		lastY = -((GLfloat)y - HEIGHT / 2);
+		lastX = (GLfloat)x;
+		lastY = (GLfloat)y;
 	}
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP){
 		arcball.mouse_up(LEFTBUTTON_UP);
 	}
 	if (button == GLUT_RIGHT_BUTTON&&state == GLUT_DOWN){
 		arcball.mouse_down(RIGHTBUTTON_DOWN);
-		lastX = (GLfloat)x - WIDTH / 2;
-		lastY = -((GLfloat)y - HEIGHT / 2);
+		lastX = (GLfloat)x;
+		lastY = (GLfloat)y;
 	}
 	if(button == GLUT_RIGHT_BUTTON&&state == GLUT_UP){
-		arcball.mouse_down(RIGHTBUTTON_UP);
+		arcball.mouse_up(RIGHTBUTTON_UP);
 	}
 	glutPostRedisplay();
 }
 
 void motion(int x, int y)
 {
-	arcball.mouse_motion(lastX, lastY, (GLfloat)x - WIDTH / 2, -((GLfloat)y - HEIGHT / 2));
-	lastX = (GLfloat)x - WIDTH / 2;
-	lastY = -((GLfloat)y - HEIGHT / 2);
-	std::cout<<lastX<<std::endl;
+	arcball.mouse_motion(lastX, lastY, (GLfloat)x, ((GLfloat)y));
+	lastX = (GLfloat)x;
+	lastY = (GLfloat)y;
 	glutPostRedisplay();
 }
 
@@ -248,7 +256,7 @@ int main(int argc, char** argv)
 	glutKeyboardFunc(keyboarddown);
 	glutKeyboardUpFunc(keyboardup);
 	glutReshapeFunc(reshape);
-	//glutIdleFunc(idle);
+	glutIdleFunc(idle);
 
 	glutMainLoop();
 
