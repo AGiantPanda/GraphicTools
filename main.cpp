@@ -152,9 +152,12 @@ void display()
 	//use vaoID & draw quads
 	glBindVertexArray(vao);
 
-	glm::mat4 view = glm::lookAt(glm::vec3(0,0,9), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+	glm::mat4 view = glm::lookAt(glm::vec3(0,0,5), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 	glm::mat4 projection = glm::perspective(GLfloat(45.0f), (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 100.0f);
 	glm::mat4 model = arcball.GetArcballMatrix();
+	glm::mat4 translate;
+	//translate = glm::translate(translate, glm::vec3(2.0, 0.0, 0.0));
+	//model = translate * model;
 	GLint modelLoc = glGetUniformLocation(programHandle, "model");
 	GLint viewLoc = glGetUniformLocation(programHandle, "view");
 	GLint projLoc = glGetUniformLocation(programHandle, "projection");

@@ -19,8 +19,6 @@ This class is used as follows:
 * when the mouse button is released, call mouse_up.
 
 Note:
-* set your camera at (0.0, 0.0, whatever_ever_you_want) 
-  as well as looking at (0.0, 0.0, 0.0), the UpAxis is 
-  supposed to be (0.0, 1.0, 0.0).
+* set your camera looking at (0.0, 0.0, 0.0).
 * draw your object at the center of the world space (which
   is (0.0, 0.0, 0.0)), or translate it yourself.

@@ -17,9 +17,7 @@ This class is used as follows:
 - when the mouse button is released, call mouse_up.
 
 Note:
-- set your camera at (0.0, 0.0, whatever_ever_you_want) 
-  as well as looking at (0.0, 0.0, 0.0), the UpAxis is 
-  supposed to be (0.0, 1.0, 0.0).
+- set your camera looking at (0.0, 0.0, 0.0).
 - draw your object at the center of the world space (which
   is (0.0, 0.0, 0.0)), or translate it yourself.
 --------------------------------------------------
@@ -51,7 +49,7 @@ class Arcball
 {
 public:
 	//setup with vectors
-	Arcball(GLfloat radius, glm::vec2 center, glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f), GLfloat angle = 0.0f) :Zoom(0.0f), Speed(SPEED)
+	Arcball(GLfloat radius, glm::vec2 center, glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f), GLfloat angle = 0.0f) :Zoom(1.0f), Speed(SPEED)
 	{
 		this->Center = center;
 		glm::quat quaternion = glm::angleAxis((angle), rotation);
@@ -71,7 +69,7 @@ public:
 	glm::mat4 GetArcballMatrix()
 	{
 		glm::mat4 zoom;
-		zoom = glm::translate(zoom, glm::vec3(0.0, 0.0, this->Zoom));
+		zoom = glm::scale(zoom, glm::vec3(this->Zoom));
 		return zoom * this->ArcballMatrix;
 	}
 	
@@ -97,6 +95,7 @@ public:
 		}
 		if(is_zooming){
 			this->Zoom += (y - lastY) * this->Speed;
+			if (this->Zoom < 0.1)this->Zoom = 0.1;
 		}
 		this->updateArcballMatrix(rotationQuat);
 	}
