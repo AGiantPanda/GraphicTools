@@ -152,7 +152,7 @@ void display()
 	//use vaoID & draw quads
 	glBindVertexArray(vao);
 
-	glm::mat4 view = glm::lookAt(glm::vec3(0,0,5), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+	glm::mat4 view = glm::lookAt(glm::vec3(5,5,5), glm::vec3(0, 0, 0), glm::normalize(glm::vec3(0, 1, 0)));//the last vector represents the up vector in the WORLD SPACE!!
 	glm::mat4 projection = glm::perspective(GLfloat(45.0f), (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 100.0f);
 	glm::mat4 model = arcball.GetArcballMatrix();
 	glm::mat4 translate;
