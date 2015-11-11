@@ -68,9 +68,7 @@ public:
 	//returns the arcball matrix
 	glm::mat4 GetArcballMatrix()
 	{
-		glm::mat4 zoom;
-		zoom = glm::scale(zoom, glm::vec3(this->Zoom));
-		return zoom * this->ArcballMatrix;
+		return this->ZoomMatrix * this->ArcballMatrix;
 	}
 	
 	void mouse_down(Mouse_State state)
@@ -81,23 +79,31 @@ public:
 			is_zooming = true;
 	}
 	
-	void mouse_motion(GLfloat lastX, GLfloat lastY, GLfloat x, GLfloat y)
+	glm::mat4 mouse_motion(GLfloat lastX, GLfloat lastY, GLfloat x, GLfloat y)
 	{
 		glm::quat rotationQuat;
-
+		glm::mat4 tempMatrix;
+		
 		if(is_rotate){
 			glm::vec3 lastVec, Vec;
 			lastVec = computeVector(lastX, lastY);
 			Vec = computeVector(x, y);
-			glm::vec3 rotationAxis = glm::normalize(glm::cross(lastVec, Vec));
 			GLfloat cosAngle = glm::dot(lastVec, Vec);
+			if (cosAngle > 0.999999){ return tempMatrix; }
+			glm::vec3 rotationAxis = glm::normalize(glm::cross(lastVec, Vec));
 			rotationQuat = glm::angleAxis(glm::degrees(glm::acos(cosAngle)), rotationAxis);
+			tempMatrix = glm::mat4_cast(rotationQuat);
+			ArcballMatrix = tempMatrix * ArcballMatrix;
 		}
 		if(is_zooming){
 			this->Zoom += (y - lastY) * this->Speed;
 			if (this->Zoom < 0.1)this->Zoom = 0.1;
+			glm::mat4 zoom;
+			ZoomMatrix = glm::scale(zoom, glm::vec3(this->Zoom));
+			tempMatrix = ZoomMatrix * tempMatrix;
 		}
-		this->updateArcballMatrix(rotationQuat);
+		
+		return tempMatrix;
 	}
 	
 	void mouse_up(Mouse_State state)
@@ -125,6 +131,7 @@ private:
 	//model attributes
 	glm::vec2 Center;
 	glm::mat4 ArcballMatrix;
+	glm::mat4 ZoomMatrix;
 	GLfloat Radius;
 	GLfloat Zoom;
 	GLfloat Speed;
@@ -132,12 +139,6 @@ private:
 	//model options
 	bool is_zooming;
 	bool is_rotate;
-	
-	//calculate the arcball matrix using the rotation and angle
-	void updateArcballMatrix(glm::quat quaternion)
-	{
-		ArcballMatrix = glm::mat4_cast(quaternion) * ArcballMatrix;
-	}
 	
 	//calculate the vector of the point
 	glm::vec3 computeVector(GLfloat x, GLfloat y)
