@@ -4,6 +4,15 @@ Tags : class
 
 ---
 
+2015.11.24 update:
+Modify the structure.
+
+The position of the camera should be somewhere at the positive Z 
+axis with the up vector pointing to the positive y axis,otherwise
+we need to do a translate in the motion func.
+
+---
+
 A C++ class that implements the Arcball.
 This class takes as input mouse events and create
 the appropriate quaternions and 4x4 matrices to 

@@ -1,2 +1,10 @@
 # Compiled Object files
-build/
+*/
+*.*
+
+# Things to commit
+!Arcball.h
+!Arcball.cpp
+!README.md
+!myShader.h
+!myShader.cpp
