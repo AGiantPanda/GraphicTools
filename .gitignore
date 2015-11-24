@@ -1,4 +1,6 @@
 # Compiled Object files
 build/
+
 main.cpp
+
 shader.h
