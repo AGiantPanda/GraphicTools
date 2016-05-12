@@ -1,5 +1,7 @@
-# Compiled Object files
-build/
-main.cpp
-shader.h
-CMakeLists.txt
+# All files
+*.*
+
+# But these
+!*.h
+!*.cpp
+!*.md
